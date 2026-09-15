@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Typecheck, lint, test, API health, bundle
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PROVIDER_MODE: mock
+      NODE_ENV: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install (single lockfile)
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+      - name: API health smoke test (mock mode)
+        run: |
+          npm run start --workspace apps/api &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:3000/health > health.json; then break; fi
+            sleep 1
+          done
+          cat health.json
+          grep -q '"provider_mode":"mock"' health.json
+          kill %1
+
+      - name: Bundle mobile app (Android, no device)
+        run: npm run export:android --workspace apps/mobile
+        env:
+          EXPO_PUBLIC_API_URL: http://127.0.0.1:3000
+          CI: 1
