@@ -53,7 +53,7 @@ Verification vocabulary used below:
 | `NODE_ENV=production PROVIDER_MODE=mock` → refuses to start, exit 1 | mock | pass |
 | `PROVIDER_MODE=live` without keys → lists missing variables, exit 1 | mock | pass |
 | `expo export --platform android` bundles the app (3.3 MB Hermes bundle) | mock | pass |
-| GitHub Actions workflow | not performed | runs on the first push of the PR |
+| GitHub Actions CI on PR #2 (ubuntu, Node 24): all steps | mock | pass (55 s) |
 
 ### Not performed
 
