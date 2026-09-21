@@ -126,3 +126,31 @@ keep phone tests and product decisions.
 repository documents, code, comments, commits and UI strings are in English.
 **Reason.** The plan is written for Tim; the rest is read by code agents and
 testers, and the app UI is English by product decision.
+
+## D-014 — 2026-09-15 — Node 24 LTS, npm 11+
+
+**Decision.** The repository targets Node 24 LTS (`.nvmrc`, `engines >=22.12`).
+**Reason.** Node 20 reached end-of-life in April 2026; Vitest 5 requires
+Node 22+; npm 10.8 crashes on this workspace layout (`edgesOut` bug).
+**Consequences.** Tim installs Node 24 on Windows and in WSL2. CI uses
+Node 24 (falls back to the workflow's pinned version).
+
+## D-015 — 2026-09-15 — Contracts consumed as TypeScript source, API run with tsx
+
+**Decision.** `packages/contracts` exposes `src/index.ts` directly
+(`"type": "module"`, explicit `.ts` import extensions). The API runs through
+`tsx`; the mobile app bundles it through Metro. No build step for contracts.
+**Reason.** One source of truth, no stale `dist`, simplest monorepo.
+**Consequences.** `allowImportingTsExtensions` is enabled in every tsconfig.
+A compiled API build is added with the Dockerfile in milestone 9.
+
+## D-016 — 2026-09-15 — Explicit provider mode, no silent mock fallback
+
+**Decision.** `PROVIDER_MODE` is `mock` or `live`. Live mode validates every
+key and model ID at startup. `NODE_ENV=production` with mock mode refuses to
+start unless `ALLOW_MOCK_PROVIDERS_IN_PRODUCTION=true` is set deliberately.
+`/health` reports the mode so the app can label mock results.
+**Reason.** The dev environment must work without paid keys, but a beta
+build must never quietly serve fixtures as AI output.
+**Consequences.** Live adapters that are not implemented yet fail with a
+structured `PROVIDER_NOT_IMPLEMENTED` error rather than falling back to mocks.

@@ -1,0 +1,27 @@
+{
+  "name": "speak-my-notes",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Turn today's lesson into a conversation. Expo app + Fastify API monorepo.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "eslint .",
+    "test": "npm run test --workspaces --if-present",
+    "check": "npm run typecheck && npm run lint && npm run test",
+    "api": "npm run dev --workspace apps/api",
+    "mobile": "npm run start --workspace apps/mobile"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.0",
+    "eslint": "^10.10.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.70.0"
+  }
+}

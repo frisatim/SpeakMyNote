@@ -10,7 +10,8 @@ practice session. Read this file at the start of every session.
    the source of truth for scope, architecture, data model and milestones.
 2. `docs/STATUS.md` — what is done, what was verified and how, what is next.
 3. `docs/DECISIONS.md` — decisions already made; do not reopen them silently.
-4. `git status` and `git log` — inspect existing code before writing any.
+4. `docs/DEVELOPMENT.md` — how to install, run and check the project.
+5. `git status` and `git log` — inspect existing code before writing any.
 
 The repository files are the continuity between sessions. Do not rely on chat
 memory. Preserve existing work; never reinitialize or overwrite an existing app.
@@ -30,7 +31,8 @@ extraction) → Practice (tap-to-record voice turns with a tutor) → Session re
 - API: Node.js LTS, TypeScript, Fastify. One instance, SQLite on a persistent
   volume for access codes, tokens and quotas. No learner history on the server.
 - Shared contracts: Zod schemas in `packages/contracts/`, no secrets.
-- Monorepo: npm workspaces, one lockfile. No Nx/Turborepo.
+- Monorepo: npm workspaces, one lockfile, Node 24 LTS. No Nx/Turborepo.
+  Expo docs for the installed SDK: https://docs.expo.dev/versions/v57.0.0/
 - AI runtime providers: **Gemini** (`@google/genai`, server-side) for image
   extraction, tutoring and post-session evaluation, one verified stable Flash
   model initially, configured through `VISION_MODEL`, `TUTOR_MODEL`,
@@ -69,7 +71,8 @@ extraction) → Practice (tap-to-record voice turns with a tutor) → Session re
    backlog in `docs/STATUS.md` (numbered to match the prompts in the plan).
 2. Small, verifiable commits on a branch named `milestone-N-<slug>`. One writer
    per branch at a time.
-3. Run the relevant checks (typecheck, lint, tests, API health, bundling).
+3. Run the relevant checks: `npm run check` (typecheck, lint, tests), API
+   health in mock mode, `npm run export:android --workspace apps/mobile`.
 4. Update `docs/STATUS.md`. Distinguish clearly between:
    - **mock checks** (fixtures, mock providers),
    - **live API checks** (real provider calls with keys),
